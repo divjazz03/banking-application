@@ -1,13 +1,12 @@
 package com.example.bankingapplication.controller;
 
-import com.example.bankingapplication.dto.BankResponse;
-import com.example.bankingapplication.dto.CreditDebitRequest;
-import com.example.bankingapplication.dto.EnquiryRequest;
-import com.example.bankingapplication.dto.UserRequest;
+import com.example.bankingapplication.dto.*;
 import com.example.bankingapplication.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -39,5 +38,11 @@ public class UserController {
     @PostMapping("debit")
     public ResponseEntity<BankResponse> debitAccount(@RequestBody CreditDebitRequest creditDebitRequest){
         return ResponseEntity.ok(userService.debitAccount(creditDebitRequest));
+    }
+
+    @PostMapping("transfer")
+    public ResponseEntity<List<BankResponse>> transferToAccount(@RequestBody TransferRequest transferRequest){
+        return ResponseEntity.ok(userService.transferToAccount(transferRequest));
+
     }
 }

@@ -11,6 +11,5 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class CreditDebitRequest {
     public String accountNumber;
-
     public BigDecimal amount;
 }

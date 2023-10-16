@@ -1,10 +1,9 @@
 package com.example.bankingapplication.service;
 
 
-import com.example.bankingapplication.dto.BankResponse;
-import com.example.bankingapplication.dto.CreditDebitRequest;
-import com.example.bankingapplication.dto.EnquiryRequest;
-import com.example.bankingapplication.dto.UserRequest;
+import com.example.bankingapplication.dto.*;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -17,4 +16,6 @@ public interface UserService {
     BankResponse creditAccount(CreditDebitRequest request);
 
     BankResponse debitAccount(CreditDebitRequest request);
+
+    List<BankResponse> transferToAccount(TransferRequest request);
 }

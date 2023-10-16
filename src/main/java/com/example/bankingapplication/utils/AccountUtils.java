@@ -26,10 +26,30 @@ public class AccountUtils {
 
     public static final String ACCOUNT_CREDITED_SUCCESSFULLY_CODE = "005";
 
-    public static final String ACCOUNT_CREDITED_SUCCESSFULLY_MESSAGE = "Account succesfully credited. Amount: ";
+    public static final String ACCOUNT_CREDITED_SUCCESSFULLY_MESSAGE = "Account successfully credited. Amount: ";
 
-    public static final String ACCOUNT_BALANCE_IS_INSUFFICIENT_CODE = "006";
+    public static final String ACCOUNT_DEBITED_SUCCESSFULLY_CODE = "006";
+
+    public static final String ACCOUNT_DEBITED_SUCCESSFULLY_MESSAGE = " was debited from your account";
+
+    public static final String ACCOUNT_OF_RECIPIENT_DOES_NOT_EXIST_CODE = "008";
+
+    public static final String ACCOUNT_OF_RECIPIENT_DOES_NOT_EXIST_MESSAGE = "Account No of recipient does not exist";
+
+    public static final String ACCOUNT_OF_SENDER_DOES_NOT_EXIST_CODE = "008";
+
+    public static final String ACCOUNT_OF_SENDER_DOES_NOT_EXIST_MESSAGE = "Account No of recipient does not exist";
+
+    public static final String ACCOUNT_BALANCE_IS_INSUFFICIENT_CODE = "007";
     public static final String ACCOUNT_BALANCE_IS_INSUFFICIENT_MESSAGE = "Your account balance is insufficient";
+
+    public static final String TRANSFER_SUCCESSFUL_CODE = "009";
+
+    public static final String TRANSFER_SUCCESSFUL_MESSAGE ="Transfer Successful";
+
+    public static final String TRANSFER_FAILED_CODE = "010";
+
+    public static final String TRANSFER_FAILED_MESSAGE = "Transfer failed";
 
 
 
