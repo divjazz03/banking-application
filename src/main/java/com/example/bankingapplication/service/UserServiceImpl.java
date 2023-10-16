@@ -153,7 +153,6 @@ public class UserServiceImpl implements UserService {
         User userToDebit = userRepository.findByAccountNumber(request.getAccountNumber());
         userToDebit.setAccountBalance(userToDebit.getAccountBalance().subtract(request.getAmount()));
         if (userToDebit.getAccountBalance().signum() < 0) {
-            userRepository.save(userToDebit);
             return BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_BALANCE_IS_INSUFFICIENT_CODE)
                     .responseMessage(AccountUtils.ACCOUNT_BALANCE_IS_INSUFFICIENT_MESSAGE)
@@ -222,11 +221,29 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+
+
         User senderUser = userRepository.findByAccountNumber(request.getAccountNoSender());
         User receiverUser = userRepository.findByAccountNumber(request.getAccountNoRecipient());
 
         senderUser.setAccountBalance(senderUser.getAccountBalance().subtract(request.getAmount()));
         receiverUser.setAccountBalance(receiverUser.getAccountBalance().add(request.getAmount()));
+
+        if ((senderUser.getAccountBalance().signum()) <= 0) {
+            bankResponses.add(BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_BALANCE_IS_INSUFFICIENT_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_BALANCE_IS_INSUFFICIENT_MESSAGE)
+                    .accountInfo(
+                            AccountInfo.builder()
+                                    .accountName(senderUser.getFirstName() + " " + senderUser.getLastName())
+                                    .accountBalance(senderUser.getAccountBalance().toPlainString())
+                                    .accountNumber(senderUser.getAccountNumber())
+                                    .build()
+                    )
+                    .build());
+            return bankResponses;
+        }
+
 
         User sentUser = userRepository.save(senderUser);
         User receivedUser = userRepository.save(receiverUser);
