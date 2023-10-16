@@ -40,13 +40,14 @@ public class User {
 
     private BigDecimal accountBalance;
 
-    private String Email;
+    private String email;
 
     private String phoneNumber;
 
     private String alternativePhoneNumber;
 
-    private String status;
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

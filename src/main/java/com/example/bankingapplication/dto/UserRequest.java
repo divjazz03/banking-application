@@ -1,6 +1,7 @@
 package com.example.bankingapplication.dto;
 
 import com.example.bankingapplication.model.Gender;
+import com.example.bankingapplication.model.Status;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -29,11 +30,9 @@ public class UserRequest {
 
     private String stateOfOrigin;
 
-    private String Email;
+    private String email;
 
     private String phoneNumber;
 
     private String alternativePhoneNumber;
-
-    private String status;
 }
