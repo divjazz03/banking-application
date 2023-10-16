@@ -12,9 +12,26 @@ public class AccountUtils {
 
     public static final String ACCOUNT_EXISTS_MESSAGE = "An account already exists";
 
-    public static final String ACCOUNT_CREATION_SUCCESS = "002";
+    public static final String ACCOUNT_CREATION_SUCCESS_CODE = "002";
 
     public static final String ACCOUNT_CREATION_SUCCESS_MESSAGE = "Your account has been created successfully";
+
+    public static final String ACCOUNT_DOES_NOT_EXIST_CODE = "003";
+
+    public static final String ACCOUNT_DOES_NOT_EXIST = "Account does not exist. Try creating an Account";
+
+    public static final String ACCOUNT_FOUND_SUCCESS_CODE = "004";
+
+    public static final String ACCOUNT_FOUND_SUCCESS_MESSAGE = "Your Account was found";
+
+    public static final String ACCOUNT_CREDITED_SUCCESSFULLY_CODE = "005";
+
+    public static final String ACCOUNT_CREDITED_SUCCESSFULLY_MESSAGE = "Account succesfully credited. Amount: ";
+
+    public static final String ACCOUNT_BALANCE_IS_INSUFFICIENT_CODE = "006";
+    public static final String ACCOUNT_BALANCE_IS_INSUFFICIENT_MESSAGE = "Your account balance is insufficient";
+
+
 
     /**
      * Generates a random accountNumber with current Year
