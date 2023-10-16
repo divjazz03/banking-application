@@ -2,6 +2,9 @@ package com.example.bankingapplication.utils;
 
 import java.time.Year;
 
+/**
+ * This class contains all utilities concerning the  <code><b>User</b></code> class
+ */
 public class AccountUtils {
 
     public static final String ACCOUNT_EXISTS_CODE = "001";

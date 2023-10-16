@@ -8,7 +8,6 @@ import com.example.bankingapplication.model.User;
 import com.example.bankingapplication.repository.UserRepository;
 import com.example.bankingapplication.utils.AccountUtils;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
