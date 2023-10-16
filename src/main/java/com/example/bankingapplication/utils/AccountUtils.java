@@ -1,5 +1,6 @@
 package com.example.bankingapplication.utils;
 
+import java.util.Random;
 import java.time.Year;
 
 /**
@@ -21,10 +22,12 @@ public class AccountUtils {
      * @return String
      */
     public static String generateAccountNo(){
+
+        Random random = new Random();
         Year currentYear = Year.now();
         int min = 100000;
         int max = 999999;
-        int randNumber =(int) (min + Math.floor((Math.random() * max)));
+        int randNumber = random.nextInt(100000, 999999);
         return String.valueOf(currentYear) + String.valueOf(randNumber);
     }
 }

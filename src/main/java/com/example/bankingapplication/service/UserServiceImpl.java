@@ -2,6 +2,7 @@ package com.example.bankingapplication.service;
 
 import com.example.bankingapplication.dto.AccountInfo;
 import com.example.bankingapplication.dto.BankResponse;
+import com.example.bankingapplication.dto.EmailDetails;
 import com.example.bankingapplication.dto.UserRequest;
 import com.example.bankingapplication.model.Status;
 import com.example.bankingapplication.model.User;
@@ -17,6 +18,8 @@ import java.math.BigDecimal;
 public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
+
+    private EmailService emailService;
 
     /**
      * This method saves a new User into the database
@@ -49,6 +52,8 @@ public class UserServiceImpl implements UserService{
                 .accountBalance(BigDecimal.ZERO)
                 .build();
         User savedUser = userRepository.save(user);
+        sendEmailAlert(savedUser);
+
 
         return BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_CREATION_SUCCESS)
@@ -64,6 +69,19 @@ public class UserServiceImpl implements UserService{
 
     public boolean checkUserExistByEmail(String email){
        return userRepository.existsByEmail(email);
+    }
+
+    public void sendEmailAlert(User saveduser){
+        EmailDetails emailDetails = EmailDetails.builder()
+                .recipient(saveduser.getEmail())
+                .subject("ACCOUNT CREATION")
+                .messageBody("<h2>Congratulations, your account has been successfully created.</h2><br/>" +
+                        "<h2>Your Account Details</h2><br/>" +
+                        "<p>Account Name: " + saveduser.getFirstName() + " " + saveduser.getMiddleName() + " " + saveduser.getLastName() + "<br/>" +
+                        "Account Number: " + saveduser.getAccountNumber() + "</p>"
+                )
+                .build();
+        emailService.sendEmailAlert(emailDetails);
     }
 
 }

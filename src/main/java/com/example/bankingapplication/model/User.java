@@ -1,18 +1,16 @@
 package com.example.bankingapplication.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import lombok.Data;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Entity
 @Builder
