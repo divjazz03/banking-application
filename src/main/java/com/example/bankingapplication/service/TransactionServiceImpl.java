@@ -15,14 +15,15 @@ public class TransactionServiceImpl implements TransactionService{
 
     TransactionRepository transactionRepository;
     @Override
-    public void saveTransaction(TransactionDTO transactionDTO) {
+    public Transaction saveTransaction(TransactionDTO transactionDTO) {
         Transaction transaction = Transaction.builder()
                 .transactionType(transactionDTO.getTransactionType())
                 .amount(transactionDTO.getAmount())
                 .accountNumber(transactionDTO.getAccountNumber())
                 .transactionStatus(TransactionStatus.SUCCESS)
                 .build();
-        transactionRepository.save(transaction);
         System.out.println("Transaction saved successfully");
+        return transactionRepository.save(transaction);
+
     }
 }

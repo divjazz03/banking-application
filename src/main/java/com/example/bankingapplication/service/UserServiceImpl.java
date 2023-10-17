@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 @AllArgsConstructor
@@ -139,7 +140,8 @@ public class UserServiceImpl implements UserService {
                 .transactionType(TransactionType.CREDIT)
                 .build();
 
-        transactionService.saveTransaction(transactionDTO);
+        Transaction trans_info = transactionService.saveTransaction(transactionDTO);
+        sendCreditAlert(userCredited, request.getAmount(), trans_info);
 
 
         return BankResponse.builder()
@@ -196,7 +198,8 @@ public class UserServiceImpl implements UserService {
                 .transactionType(TransactionType.DEBIT)
                 .build();
 
-        transactionService.saveTransaction(transactionDTO);
+        Transaction trans_info = transactionService.saveTransaction(transactionDTO);
+        sendDebitAlert(userDebited, request.getAmount(), trans_info);
         return BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_DEBITED_SUCCESSFULLY_CODE)
                 .responseMessage(request.getAmount().toPlainString() + AccountUtils.ACCOUNT_DEBITED_SUCCESSFULLY_MESSAGE)
@@ -286,7 +289,9 @@ public class UserServiceImpl implements UserService {
                 .transactionType(TransactionType.TRANSFER)
                 .build();
 
-        transactionService.saveTransaction(transactionDTO);
+        Transaction trans_info = transactionService.saveTransaction(transactionDTO);
+
+        transferAlert(sentUser, receivedUser, request.getAmount(), trans_info);
 
         bankResponses.add(
                 BankResponse.builder()
@@ -347,6 +352,58 @@ public class UserServiceImpl implements UserService {
                         "Account Name: " + saveduser.getFirstName() + " " + saveduser.getMiddleName() + " " + saveduser.getLastName() + "\n" +
                         "Account Number: " + saveduser.getAccountNumber() + "\n"
                 )
+                .build();
+        emailService.sendEmailAlert(emailDetails);
+    }
+
+    /**
+     * Sends an Email to the User after he must have been debited
+     * @param debitedUser Object of debited User
+     * @param amount Amount from request that was debited
+     * @param transaction Transaction Object
+     */
+    public void sendDebitAlert(User debitedUser, BigDecimal amount, Transaction transaction){
+        EmailDetails emailDetails = EmailDetails.builder()
+                .recipient(debitedUser.getEmail())
+                .subject("DEBIT ALERT")
+                .messageBody("Good day " + debitedUser.getFirstName() + ":\n" +
+                        "The Sum of #" + amount +  " has been debited from your account \n" +
+                        "Trans ID: " + transaction.getTransactionId())
+                .build();
+        emailService.sendEmailAlert(emailDetails);
+    }
+
+    /**
+     * Sends an Email to the User after he must have been debited
+     * @param creditedUser Object of debited User
+     * @param amount Amount from request that was credited
+     * @param transaction Transaction Object
+     */
+    public void sendCreditAlert(User creditedUser, BigDecimal amount, Transaction transaction){
+        EmailDetails emailDetails = EmailDetails.builder()
+                .recipient(creditedUser.getEmail())
+                .subject("DEBIT ALERT")
+                .messageBody("Good day " + creditedUser.getFirstName() + ":\n" +
+                        "The Sum of #" + amount +  " has been credited to your account \n" +
+                        "Trans ID: " + transaction.getTransactionId())
+                .build();
+        emailService.sendEmailAlert(emailDetails);
+    }
+
+    /**
+     * Sends an Email to the User after he must have been debited after a transfer operation
+     * @param senderUser Object of debited User
+     * @param receiverUser Object of receiver User
+     * @param amount Amount from request that was debited
+     * @param transaction Transaction Object
+     */
+    public void transferAlert(User senderUser, User receiverUser, BigDecimal amount, Transaction transaction){
+        EmailDetails emailDetails = EmailDetails.builder()
+                .recipient(senderUser.getEmail())
+                .subject("Transfer Successful")
+                .messageBody("You have successfully transferred #" + amount + " to " +
+                        "" + receiverUser.getFirstName() + " " + receiverUser.getLastName() +"\n" +
+                        " Trans ID: " + transaction.getTransactionId())
                 .build();
         emailService.sendEmailAlert(emailDetails);
     }
