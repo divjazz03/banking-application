@@ -1,6 +1,6 @@
 package com.example.bankingapplication.dto;
 
-import com.example.bankingapplication.model.Gender;
+import com.example.bankingapplication.model.enums.Gender;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;

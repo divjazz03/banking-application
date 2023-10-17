@@ -1,8 +1,11 @@
 package com.example.bankingapplication.service;
 
 import com.example.bankingapplication.dto.*;
-import com.example.bankingapplication.model.Status;
+import com.example.bankingapplication.model.Transaction;
+import com.example.bankingapplication.model.enums.Status;
 import com.example.bankingapplication.model.User;
+import com.example.bankingapplication.model.enums.TransactionStatus;
+import com.example.bankingapplication.model.enums.TransactionType;
 import com.example.bankingapplication.repository.UserRepository;
 import com.example.bankingapplication.utils.AccountUtils;
 import lombok.AllArgsConstructor;
@@ -19,6 +22,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     private EmailService emailService;
+
+    private TransactionService transactionService;
 
     /**
      * This method saves a new User into the database
@@ -52,7 +57,7 @@ public class UserServiceImpl implements UserService {
                 .accountBalance(BigDecimal.ZERO)
                 .build();
         User savedUser = userRepository.save(user);
-        // sendEmailAlert(savedUser); Not working yet
+        sendEmailAlert(savedUser);
 
 
         return BankResponse.builder()
@@ -89,6 +94,11 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    /**
+     * Returns the Accounts Username
+     * @param request
+     * @return Account UserName (String)
+     */
     @Override
     public String nameEnquiry(EnquiryRequest request) {
         if (!checkUserExistsByAccount(request.getAccountNumber())) {
@@ -103,7 +113,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Credits destination account number if it exists
      *
-     * @param request
+     * @param request Request DTO  that contains Credit/Debit info
      * @return BankResponse
      */
     @Override
@@ -121,6 +131,17 @@ public class UserServiceImpl implements UserService {
         userToCredit.setAccountBalance(userToCredit.getAccountBalance().add(request.getAmount()));
         User userCredited = userRepository.save(userToCredit);
 
+        //Save Transaction
+        TransactionDTO transactionDTO = TransactionDTO.builder()
+                .accountNumber(userCredited.getAccountNumber())
+                .transactionStatus(TransactionStatus.SUCCESS)
+                .amount(request.getAmount())
+                .transactionType(TransactionType.CREDIT)
+                .build();
+
+        transactionService.saveTransaction(transactionDTO);
+
+
         return BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_CREDITED_SUCCESSFULLY_CODE)
                 .responseMessage(AccountUtils.ACCOUNT_CREDITED_SUCCESSFULLY_MESSAGE + request.getAmount().toPlainString())
@@ -137,7 +158,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Debits destination account number if it exists
      *
-     * @param request
+     * @param request A request DTO that contains credit / debit info
      * @return BankResponse
      */
     @Override
@@ -166,6 +187,16 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
         User userDebited = userRepository.save(userToDebit);
+
+        //Save Transaction
+        TransactionDTO transactionDTO = TransactionDTO.builder()
+                .accountNumber(userDebited.getAccountNumber())
+                .transactionStatus(TransactionStatus.SUCCESS)
+                .amount(request.getAmount())
+                .transactionType(TransactionType.DEBIT)
+                .build();
+
+        transactionService.saveTransaction(transactionDTO);
         return BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_DEBITED_SUCCESSFULLY_CODE)
                 .responseMessage(request.getAmount().toPlainString() + AccountUtils.ACCOUNT_DEBITED_SUCCESSFULLY_MESSAGE)
@@ -183,7 +214,7 @@ public class UserServiceImpl implements UserService {
      * transfers an amount from one account specified in the request
      * to another
      *
-     * @param request
+     * @param request a transfer DTO for transfer info
      * @return BankResponse containing transfer result
      */
     @Override
@@ -247,6 +278,15 @@ public class UserServiceImpl implements UserService {
 
         User sentUser = userRepository.save(senderUser);
         User receivedUser = userRepository.save(receiverUser);
+        //Save Transaction
+        TransactionDTO transactionDTO = TransactionDTO.builder()
+                .accountNumber(sentUser.getAccountNumber())
+                .transactionStatus(TransactionStatus.SUCCESS)
+                .amount(request.getAmount())
+                .transactionType(TransactionType.TRANSFER)
+                .build();
+
+        transactionService.saveTransaction(transactionDTO);
 
         bankResponses.add(
                 BankResponse.builder()
@@ -280,7 +320,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Checks if a user with given email exists in the Database
      *
-     * @param email
+     * @param email Email to check for
      * @return true if user exists
      */
     public boolean checkUserExistByEmail(String email) {
@@ -291,7 +331,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Checks if a user with given account number exists in the Database
      *
-     * @param accountNo
+     * @param accountNo Account number to check for
      * @return true if user exists
      */
     public boolean checkUserExistsByAccount(String accountNo) {

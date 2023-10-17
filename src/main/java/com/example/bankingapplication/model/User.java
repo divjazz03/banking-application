@@ -1,12 +1,13 @@
 package com.example.bankingapplication.model;
 
+import com.example.bankingapplication.model.enums.Gender;
+import com.example.bankingapplication.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
